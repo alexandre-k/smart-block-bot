@@ -67,7 +67,9 @@ func main() {
 		if update.Message != nil {
 			chatId := tu.ID(update.Message.Chat.ID)
 
-			bot.SendMessage(tu.Message(chatId, "Let me think..."))
+			if !strings.HasPrefix(update.Message.Text, "/start") {
+				bot.SendMessage(tu.Message(chatId, "Let me think..."))
+			}
 			// _, _ = bot.CopyMessage(tu.CopyMessage(chatId, chatId, update.Message.MessageID),)
 			commandSplit := strings.Split(update.Message.Text, " ")
 			switch command := commandSplit[0]; command {
@@ -105,6 +107,8 @@ func main() {
 				for _, customer := range customers {
 					bot.SendMessage(tu.Message(chatId, customer.Id))
 				}
+			case "/start":
+				bot.SendMessage(tu.Message(chatId, "Welcome! See the menu to get a list of commands."))
 			default:
 				bot.SendMessage(tu.Message(chatId, "Unknown command."))
 			}
