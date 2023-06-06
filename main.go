@@ -84,7 +84,7 @@ func main() {
 				  defaultInvoiceDueDate.Month(),
 				  defaultInvoiceDueDate.Day())
 			  invoice, err := api.CreateInvoice(orderId, customerId, invoiceTitle, dueDate)
-			  if err == "" {
+			  if err != "" {
 				  invoices, _ := api.SearchInvoices()
 				  for _, invoice := range invoices {
 					  if invoice.OrderId == orderId {

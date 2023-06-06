@@ -266,6 +266,7 @@ func (api SquareApi) SearchInvoices() ([]Invoice, string) {
 	queryFilter := map[string]map[string]map[string][]string{
 		"query": {"filter": {"location_ids": []string{api.LocationId}}}}
 	bQueryFilter, _ := json.Marshal(queryFilter)
+	log.Println(queryFilter)
 	body, statusCode := api.createSquareRequest(Params{Method: http.MethodPost, Endpoint: "/invoices/search", Data: bQueryFilter})
 	if statusCode >= 400 {
 		var data ErrorResponse
