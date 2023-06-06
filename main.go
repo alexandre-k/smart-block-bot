@@ -1,21 +1,20 @@
 package main
 
 import (
-	"log"
+	"./squareapi"
+	"bytes"
 	"fmt"
-	"time"
-	"os"
-	"strings"
-	"image/png"
-	"github.com/mymmrac/telego"
 	"github.com/boombuler/barcode"
 	"github.com/boombuler/barcode/qr"
 	"github.com/joho/godotenv"
+	"github.com/mymmrac/telego"
 	tu "github.com/mymmrac/telego/telegoutil"
-	"bytes"
-	"./squareapi"
+	"image/png"
+	"log"
+	"os"
+	"strings"
+	"time"
 )
-
 
 func sendQrCode(bot *telego.Bot, invoiceId string, orderId string, chatId telego.ChatID) {
 	paymentLink := os.Getenv("SQUARE_PAYMENT_URL") + invoiceId
@@ -58,9 +57,9 @@ func main() {
 	defer bot.StopLongPolling()
 
 	var api = squareapi.SquareApi{
-		LocationId: os.Getenv("SELLER_LOCATION_ID"),
-		Version: os.Getenv("SQUARE_API_VERSION"),
-		Endpoint: os.Getenv("SQUARE_API_ENDPOINT"),
+		LocationId:  os.Getenv("SELLER_LOCATION_ID"),
+		Version:     os.Getenv("SQUARE_API_VERSION"),
+		Endpoint:    os.Getenv("SQUARE_API_ENDPOINT"),
 		AccessToken: os.Getenv("SQUARE_ACCESS_TOKEN"),
 	}
 
@@ -73,29 +72,29 @@ func main() {
 			commandSplit := strings.Split(update.Message.Text, " ")
 			switch command := commandSplit[0]; command {
 			case "/invoice":
-			  // var orderId = "Ul3Or1Q1QrwaF6XgzhgkeIsNua4F"
+				// var orderId = "Ul3Or1Q1QrwaF6XgzhgkeIsNua4F"
 				var orderId = commandSplit[1]
 				var customerId = commandSplit[2]
 				// var invoiceTitle = commandSplit[3]
-			  var invoiceTitle = "Customer invoice"
-			  var defaultInvoiceDueDate = time.Now().AddDate(0, 1, 0)
-			  dueDate := fmt.Sprintf("%d-%02d-%02d",
-				  defaultInvoiceDueDate.Year(),
-				  defaultInvoiceDueDate.Month(),
-				  defaultInvoiceDueDate.Day())
-			  invoice, err := api.CreateInvoice(orderId, customerId, invoiceTitle, dueDate)
-			  if err != "" {
-				  invoices, _ := api.SearchInvoices()
-				  for _, invoice := range invoices {
-					  if invoice.OrderId == orderId {
-						  sendQrCode(bot, invoice.Id, invoice.OrderId, chatId)
+				var invoiceTitle = "Customer invoice"
+				var defaultInvoiceDueDate = time.Now().AddDate(0, 1, 0)
+				dueDate := fmt.Sprintf("%d-%02d-%02d",
+					defaultInvoiceDueDate.Year(),
+					defaultInvoiceDueDate.Month(),
+					defaultInvoiceDueDate.Day())
+				invoice, err := api.CreateInvoice(orderId, customerId, invoiceTitle, dueDate)
+				if err != "" {
+					invoices, _ := api.SearchInvoices()
+					for _, invoice := range invoices {
+						if invoice.OrderId == orderId {
+							sendQrCode(bot, invoice.Id, invoice.OrderId, chatId)
 
-					  }
-				  }
-				  return
+						}
+					}
+					return
 
-			  }
-			  sendQrCode(bot, invoice.Id, invoice.OrderId, chatId)
+				}
+				sendQrCode(bot, invoice.Id, invoice.OrderId, chatId)
 			case "/orders":
 				orders, _ := api.GetOrders()
 				for _, order := range orders {
