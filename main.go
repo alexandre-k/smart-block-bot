@@ -75,6 +75,10 @@ func main() {
 			switch command := commandSplit[0]; command {
 			case "/invoice":
 				// var orderId = "Ul3Or1Q1QrwaF6XgzhgkeIsNua4F"
+				if len(commandSplit) != 3 {
+					bot.SendMessage(tu.Message(chatId, "Command should be of the form: /invoice <order_id> <customer_id>"))
+					continue
+				}
 				var orderId = commandSplit[1]
 				var customerId = commandSplit[2]
 				// var invoiceTitle = commandSplit[3]
