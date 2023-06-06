@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./squareapi"
+	"bot/squareapi"
 	"bytes"
 	"fmt"
 	"github.com/boombuler/barcode"

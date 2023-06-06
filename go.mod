@@ -1,4 +1,4 @@
-module bot/squareapi
+module bot
 
 go 1.20
 
