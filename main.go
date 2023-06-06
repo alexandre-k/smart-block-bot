@@ -93,10 +93,10 @@ func main() {
 
 						}
 					}
-					return
 
+				} else {
+					sendQrCode(bot, invoice.Id, invoice.OrderId, chatId)
 				}
-				sendQrCode(bot, invoice.Id, invoice.OrderId, chatId)
 			case "/orders":
 				orders, _ := api.GetOrders()
 				for _, order := range orders {
